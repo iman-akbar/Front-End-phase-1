@@ -25,6 +25,15 @@
                     block
                     >Add New</v-btn
                   >
+                  <v-text-field v-show="input" v-model="param.title"></v-text-field>
+                   <b-form-group class="text-label" v-show="input">
+                    <b-form-file
+                      @change="upload($event)"
+                      accept="image/*"
+                      
+                      ref="fileinput"
+                    ></b-form-file>
+                  </b-form-group>
     <v-main>
       <router-view/>
     </v-main>
@@ -39,7 +48,8 @@ export default {
   data: () => ({
     //
     listData:[],
-    param:{}
+    param:{title:'',
+    foto:null,}
   }),
   mounted(){
     axios.get(`URL`)
@@ -48,11 +58,17 @@ export default {
     })
   },
   methods: {
+    upload(event) {
+      console.log("VALUE " + JSON.stringify(event));
+      this.foto = event.target.files[0];
+    },
     newData(){
       axios.post(`URL`, this.param)
     .then((res)=>{
-      this.listData= res.data
+      this.listData.push(res.data)
+
     })
+    .catch((err)=>console.log(err))
     }
   },
 };
